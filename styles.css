@@ -1,11 +1,14 @@
+/* تنسيق العام للجسم */
 body {
     font-family: Arial, sans-serif;
     direction: rtl;
     background-color: #fff;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
+/* تنسيق الرأس */
 header {
     display: flex;
     justify-content: space-between;
@@ -15,6 +18,7 @@ header {
     color: #fff;
 }
 
+/* تنسيق الشعار */
 header .logo {
     display: flex;
     align-items: center;
@@ -26,6 +30,12 @@ header .logo img {
     margin-right: 10px;
 }
 
+header h1 {
+    font-size: 24px;
+    color: #FFD700; /* اللون الذهبي */
+}
+
+/* تنسيق البحث */
 #search {
     padding: 10px;
     font-size: 16px;
@@ -34,14 +44,18 @@ header .logo img {
     border: 1px solid #ccc;
 }
 
+/* تنسيق الأقسام */
 section {
     padding: 20px;
 }
 
 h2 {
     color: #000;
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
+/* تنسيق الفئات */
 ul {
     list-style-type: none;
     padding: 0;
@@ -52,7 +66,7 @@ ul li {
 }
 
 button {
-    padding: 10px;
+    padding: 10px 20px;
     font-size: 16px;
     background-color: #4CAF50;
     color: white;
@@ -63,4 +77,94 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+/* تنسيق التفاصيل المنتجات */
+.product-detail {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.product-detail img {
+    width: 300px;
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+.product-detail h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.product-detail p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 12px 20px;
+    background-color: #FFD700; /* الذهبي */
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #FFA500; /* لون البرتقالي */
+}
+
+/* تنسيق النموذج */
+form {
+    margin-top: 20px;
+}
+
+form label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+form input, form select, form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+form button {
+    background-color: #000;
+    color: #FFD700; /* الذهبي */
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #FFD700;
+    color: #000;
+}
+
+/* تنسيق الأزرار */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #FFD700; /* الذهبي */
+    color: black;
+}
+
+/* تنسيق السلة */
+#cart-items {
+    margin-top: 20px;
 }
