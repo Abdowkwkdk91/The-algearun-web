@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="logo.png" alt="شعار الموقع">
+            <h1>متجرنا</h1>
+        </div>
+        <input type="text" id="search" placeholder="ابحث عن منتج..." onkeyup="searchProducts()">
+    </header>
+
+    <section>
+        <h2>الفئات</h2>
+        <ul id="categories">
+            <li><button onclick="filterByCategory('ملابس')">ملابس</button></li>
+            <li><button onclick="filterByCategory('أدوات منزلية')">أدوات منزلية</button></li>
+            <li><button onclick="filterByCategory('أطعمة تقليدية')">أطعمة تقليدية</button></li>
+        </ul>
+
+        <h2>منتجات مميزة</h2>
+        <div id="featured-products">
+            <!-- سيتم إضافة المنتجات هنا -->
+        </div>
+    </section>
+</body>
+<script src="scripts.js"></script>
+</html>
