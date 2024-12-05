@@ -10,22 +10,40 @@
     <header>
         <div class="logo">
             <img src="logo.png" alt="شعار الموقع">
-            <h1>ALG stor</h1>
+            <h1>متجرنا</h1>
         </div>
         <input type="text" id="search" placeholder="ابحث عن منتج..." onkeyup="searchProducts()">
     </header>
 
     <section>
-        <h2>الفئات</h2>
-        <ul id="categories">
-            <li><button onclick="filterByCategory('ملابس')">ملابس</button></li>
-            <li><button onclick="filterByCategory('أدوات منزلية')">أدوات منزلية</button></li>
-            <li><button onclick="filterByCategory('أطعمة تقليدية')">أطعمة تقليدية</button></li>
-        </ul>
+        <h2>أزرار الوصول السريع</h2>
+        
+        <!-- زر لتسجيل الدخول -->
+        <div class="button-container">
+            <a href="lo.html">
+                <button class="btn">تسجيل دخول</button>
+            </a>
+        </div>
 
-        <h2>منتجات مميزة</h2>
-        <div id="featured-products">
-            <!-- سيتم إضافة المنتجات هنا -->
+        <!-- زر لإضافة سلعة للبائعين -->
+        <div class="button-container">
+            <a href="ap.html">
+                <button class="btn">إضافة سلعة</button>
+            </a>
+        </div>
+
+        <!-- زر لتصفح المنتجات -->
+        <div class="button-container">
+            <a href="pd.html">
+                <button class="btn">عرض المنتجات</button>
+            </a>
+        </div>
+
+        <!-- زر لتصفح التسوق للمشتري -->
+        <div class="button-container">
+            <a href="sc.html">
+                <button class="btn">التسوق الآن</button>
+            </a>
         </div>
     </section>
 </body>
