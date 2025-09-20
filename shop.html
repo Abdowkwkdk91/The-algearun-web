@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>متجر التصاميم</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --primary-color: #0d6efd; --secondary-color: #0dcaf0; --bg-main: #f8f9fa; --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.06); --border-radius: 12px; }
+    body { font-family: 'Cairo', sans-serif; background-color: var(--bg-main); }
+    .header { text-align: center; margin-bottom: 2.5rem; padding-top: 1.5rem; }
+    .header h1 { font-size: 3rem; font-weight: 900; color: var(--primary-color); }
+    .user-info-bar { background: #fff; padding: 0.5rem 1rem; border-radius: 50px; box-shadow: var(--card-shadow); }
+    #designs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; padding: 1.5rem; }
+    .design-card { background: #fff; border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .design-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(13, 110, 253, 0.2); }
+    .image-container { position: relative; }
+    .image-container::after { content: 'PREVIEW'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg); font-size: 2.5rem; font-weight: 900; color: rgba(255, 255, 255, 0.4); pointer-events: none; text-shadow: 0 0 15px rgba(0,0,0,0.6); }
+    .design-card img { width: 100%; height: 250px; object-fit: cover; }
+    .design-info { padding: 1.5rem; text-align: center; flex-grow: 1; display: flex; flex-direction: column; }
+    .design-info h3 { margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 700; }
+    .design-price { color: var(--primary-color); font-size: 1.7rem; font-weight: 900; margin-bottom: 1.5rem; }
+    .buy-button { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; padding: 0.8rem 1.6rem; border-radius: 50px; font-weight: 700; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3); border: none; cursor: pointer; margin-top: auto; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+    .modal-overlay.visible { display: flex; }
+    .certificate { background-color: #fdfdfd; width: 550px; max-width: 95%; padding: 2rem; border-radius: 10px; text-align: center; border: 10px solid transparent; border-image: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) 1; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+    .certificate h2 { color: var(--primary-color); font-size: 2rem; font-weight: 900; }
+    .certificate .design-name { font-size: 1.5rem; font-weight: 700; margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 5px solid var(--primary-color); }
+    .certificate .purchase-id { font-size: 1rem; font-weight: 600; color: #dc3545; letter-spacing: 2px; }
+    #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.9); z-index: 3000; display: none; justify-content: center; align-items: center; }
+  </style>
+</head>
+<body>
+
+  <div id="loading-overlay"><div class="spinner-border text-primary" role="status"></div></div>
+  <div id="login-prompt" class="container text-center vh-100 d-flex justify-content-center align-items-center d-none">
+    <div class="alert alert-warning p-4"><h3><i class="bi bi-exclamation-triangle-fill"></i> الرجاء تسجيل الدخول</h3><p>يجب عليك تسجيل الدخول في الموقع الرئيسي أولاً.</p><a href="index.html" class="btn btn-primary">الانتقال إلى صفحة تسجيل الدخول</a></div>
+  </div>
+  <div id="shop-content" class="d-none">
+    <div class="container">
+      <div class="header">
+          <h1>🎨 متجر التصاميم</h1>
+          <div id="user-info-bar" class="user-info-bar d-inline-flex align-items-center gap-3">
+              <span id="username-display"></span>
+              <span id="roble-balance-display" class="badge bg-primary fs-6"></span>
+          </div>
+      </div>
+      <div id="designs-grid"></div>
+    </div>
+  </div>
+  <div id="purchase-modal" class="modal-overlay">
+    <div class="certificate">
+      <h2>🏆 شهادة شراء 🏆</h2><p>شكراً لشرائك! يرجى تحميل هذه الشهادة وتقديمها للمسؤول لاستلام تصميمك الأصلي.</p>
+      <div id="cert-design-name" class="design-name"></div><p>رقم الشراء الفريد الخاص بك هو:</p>
+      <div id="cert-purchase-id" class="purchase-id"></div>
+      <div class="d-grid gap-2 mt-4"><button id="download-cert-btn" class="btn btn-primary"><i class="bi bi-download"></i> تحميل الشهادة</button><button id="close-modal-btn" class="btn btn-outline-secondary">إغلاق</button></div>
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    const firebaseConfig = { apiKey: "AIzaSyA9dfAX6QsQb2b5WQcg4x41oBw7UVnGrcA", authDomain: "qdjeizjeheidjd.firebaseapp.com", projectId: "qdjeizjeheidjd", storageBucket: "qdjeizjeheidjd.firebasestorage.app", messagingSenderId: "790923875489", appId: "1:790923875489:web:76ce647204360a15d80ce0" };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const { serverTimestamp } = firebase.firestore.FieldValue;
+    let currentUserData = null;
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const showLoading = () => loadingOverlay.style.display = 'flex';
+    const hideLoading = () => loadingOverlay.style.display = 'none';
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('shop-content').classList.remove('d-none');
+            document.getElementById('login-prompt').classList.add('d-none');
+            db.collection('users').doc(user.uid).onSnapshot(doc => {
+                if (doc.exists) {
+                    currentUserData = { uid: user.uid, ...doc.data() };
+                    document.getElementById('username-display').textContent = `أهلاً، ${currentUserData.username}`;
+                    document.getElementById('roble-balance-display').innerHTML = `<i class="bi bi-coin"></i> ${currentUserData.robleBalance || 0}`;
+                    loadDesignsFromFirestore();
+                }
+            });
+        } else {
+            document.getElementById('shop-content').classList.add('d-none');
+            document.getElementById('login-prompt').classList.remove('d-none');
+            hideLoading();
+        }
+    });
+    async function loadDesignsFromFirestore() {
+        showLoading();
+        const grid = document.getElementById("designs-grid");
+        grid.innerHTML = "";
+        try {
+            const snapshot = await db.collection('shop_items').orderBy('createdAt', 'desc').get();
+            if (snapshot.empty) {
+                grid.innerHTML = '<div class="alert alert-info">لا توجد تصاميم في المتجر حاليًا.</div>';
+            } else {
+                snapshot.forEach(doc => {
+                    const design = doc.data();
+                    const div = document.createElement("div");
+                    div.className = "design-card";
+                    div.innerHTML = `<div class="image-container"><img src="${design.imageUrl}" alt="${design.name}"></div><div class="design-info"><h3>${design.name}</h3><div class="design-price">${design.price} <span>روبل</span></div><button class="buy-button" onclick='confirmPurchase(${JSON.stringify(design)})'>شراء التصميم</button></div>`;
+                    grid.appendChild(div);
+                });
+            }
+        } catch (error) {
+            console.error("Error loading designs:", error);
+            grid.innerHTML = '<div class="alert alert-danger">حدث خطأ أثناء تحميل المتجر.</div>';
+        } finally {
+            hideLoading();
+        }
+    }
+    function confirmPurchase(design) {
+        if (!currentUserData) return;
+        if ((currentUserData.robleBalance || 0) < design.price) { alert("رصيدك غير كافٍ!"); return; }
+        if (confirm(`هل أنت متأكد من شراء "${design.name}" مقابل ${design.price} روبل؟`)) { performPurchase(design); }
+    }
+    async function performPurchase(design) {
+        showLoading();
+        const userRef = db.collection('users').doc(currentUserData.uid);
+        const itemRef = db.collection('shop_items').doc(design.itemId);
+        try {
+            await db.runTransaction(async (t) => {
+                const userDoc = await t.get(userRef);
+                const itemDoc = await t.get(itemRef);
+                if (!itemDoc.exists) throw new Error("هذا التصميم تم شراؤه للتو.");
+                const currentBalance = userDoc.data().robleBalance || 0;
+                if (currentBalance < design.price) throw new Error("رصيدك غير كافٍ.");
+                t.update(userRef, { robleBalance: currentBalance - design.price });
+                t.delete(itemRef);
+                t.set(db.collection('transactions').doc(), { userId: currentUserData.uid, type: 'purchase', amount: design.price, details: `شراء تصميم: ${design.name}`, timestamp: serverTimestamp() });
+            });
+            showCertificate(design.name, `PURCHASE-${Date.now()}`);
+        } catch (error) {
+            alert(`فشل الشراء: ${error.message}`);
+            loadDesignsFromFirestore();
+        } finally {
+            hideLoading();
+        }
+    }
+    function showCertificate(designName, purchaseId) {
+        document.getElementById('cert-design-name').textContent = designName;
+        document.getElementById('cert-purchase-id').textContent = purchaseId;
+        document.getElementById('purchase-modal').classList.add('visible');
+    }
+    document.getElementById('close-modal-btn').addEventListener('click', () => { document.getElementById('purchase-modal').classList.remove('visible'); });
+    document.getElementById('download-cert-btn').addEventListener('click', () => {
+        showLoading();
+        html2canvas(document.querySelector('.certificate')).then(canvas => {
+            const link = document.createElement('a'); link.download = `certificate-${Date.now()}.png`; link.href = canvas.toDataURL("image/png"); link.click(); hideLoading();
+        });
+    });
+    document.addEventListener('DOMContentLoaded', () => { showLoading(); });
+  </script>
+</body>
+</html>
